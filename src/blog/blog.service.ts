@@ -20,7 +20,7 @@ export class BlogService {
   }
 
   findById(id: string): Promise<BlogEntity> {
-    return this.blogRepository.findOne({ id });
+    return this.blogRepository.findOne({ relations: ['comments'], where: { id } });
   }
 
   add(user: UserEntity, dto: AddBlogDto): Promise<BlogEntity> {
@@ -40,5 +40,9 @@ export class BlogService {
       return new SuccessResponse();
     }
     throw new BadRequestException('Blog not found.');
+  }
+
+  async count(): Promise<number> {
+    return this.blogRepository.count();
   }
 }

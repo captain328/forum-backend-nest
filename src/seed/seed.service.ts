@@ -8,23 +8,28 @@ import {
   seedBlogContentWordCount,
   seedBlogCountPerUser,
   seedBlogTitleWordCount,
+  seedCommentCountPerBlog,
+  seedCommentWordCount,
   seedGeneralUserCount,
   seedModeratorCount,
 } from './consts';
 import { UserEntity } from '../users/entities/user.entity';
 import { BlogService } from '../blog/blog.service';
+import { CommentService } from '../comment/comment.service';
 
 @Injectable()
 export class SeedService {
   constructor(
     private userService: UsersService,
     private blogService: BlogService,
+    private commentService: CommentService,
   ) {
   }
 
   async start() {
     await this.seedUsers();
     await this.seedBlogs();
+    await this.seedComments();
   }
 
   async seedUsers() {
@@ -63,6 +68,11 @@ export class SeedService {
 
   async seedBlogs() {
     console.log('Start adding seed blogs...');
+    const count = await this.blogService.count();
+    if (count) {
+      console.log('skipped blog seed');
+      return;
+    }
     const users = await this.userService.find();
     await Promise.all(users.map(async user => {
       console.log(`Adding seed blogs for user ${user.email}...`);
@@ -72,7 +82,25 @@ export class SeedService {
         await this.blogService.add(user, { title, content });
       }
     }));
-    console.log('Finished add seed blogs.');
+    console.log('Finished adding seed blogs.');
+  }
+
+  async seedComments() {
+    console.log('Start adding seed comments...');
+    const count = await this.commentService.count();
+    if (count) {
+      console.log('skipped comment seed');
+      return;
+    }
+    const blogs = await this.blogService.find();
+    await Promise.all(blogs.map(async blog => {
+      console.log(`Adding seed comments for blog "${blog.title.substr(20)}"...`);
+      for (let i = 0; i < seedCommentCountPerBlog; i++) {
+        const content = Faker.lorem.sentence(seedCommentWordCount);
+        await this.commentService.add(blog, { content });
+      }
+    }));
+    console.log('Finished adding seed comments.');
   }
 
   private async addUserWithRole(role: UserRole): Promise<UserEntity> {
@@ -87,3 +115,4 @@ export class SeedService {
     return this.userService.updateUser(user);
   }
 }
+
