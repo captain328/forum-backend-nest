@@ -25,7 +25,15 @@ export class UsersService {
 
   async addUser(dto: RegisterUserDto): Promise<User> {
     const user = getFromDto<User>(dto, new User());
-    user.role = UserRole.Writer;
+    user.role = UserRole.User;
     return this.userRepository.save(user);
+  }
+
+  async updateUser(user: User): Promise<User> {
+    return this.userRepository.save(user);
+  }
+
+  async count(): Promise<number> {
+    return this.userRepository.count();
   }
 }

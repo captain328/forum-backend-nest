@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -27,6 +27,7 @@ export class AuthController {
   }
 
   @ApiOkResponse({ type: TokenResponse })
+  @ApiOperation({ summary: 'Register a general user with "USER" role.' })
   @Post('register')
   register(@Body() dto: RegisterUserDto): Promise<TokenResponse> {
     return this.authService.registerUser(dto);

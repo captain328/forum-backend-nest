@@ -7,7 +7,7 @@ export class RegisterUserDto {
   @IsNotEmpty()
   fullName: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: true})
   @IsEmail()
   email: string;
 
