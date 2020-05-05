@@ -20,7 +20,8 @@ export class AuthController {
   }
 
   @UseGuards(LocalAuthGuard)
-  @ApiOkResponse({ type: TokenResponse })
+  @ApiOperation({ summary: 'Login with email and password.' })
+  @ApiOkResponse({ type: TokenResponse, description: 'Returns access token.' })
   @Post('login')
   async login(@Request() req, @Body() dto: LoginDto): Promise<TokenResponse> {
     return this.authService.login(req.user);
@@ -35,6 +36,7 @@ export class AuthController {
 
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserDto })
+  @ApiOperation({ summary: 'Get user profile.' })
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req): Promise<UserDto> {
