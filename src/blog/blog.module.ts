@@ -13,6 +13,7 @@ import { BlogEntity } from './entities/blog.entity';
     TypeOrmModule.forFeature([BlogEntity]),
     UsersModule,
   ],
+  exports: [BlogService],
 })
 export class BlogModule {
 }

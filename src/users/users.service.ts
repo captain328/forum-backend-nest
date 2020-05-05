@@ -35,4 +35,8 @@ export class UsersService {
   async count(): Promise<number> {
     return this.userRepository.count();
   }
+
+  async find(): Promise<UserEntity[]> {
+    return this.userRepository.find();
+  }
 }

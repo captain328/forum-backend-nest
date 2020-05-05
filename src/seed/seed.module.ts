@@ -1,9 +1,11 @@
+import { UsersModule } from '../users/users.module';
+import { BlogModule } from '../blog/blog.module';
 import { Module } from '@nestjs/common';
 import { SeedService } from './seed.service';
-import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [UsersModule],
-  providers: [SeedService]
+  imports: [UsersModule, BlogModule],
+  providers: [SeedService],
 })
-export class SeedModule {}
+export class SeedModule {
+}
