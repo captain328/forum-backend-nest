@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 
 import { AppModule } from './app.module';
+import { SeedService } from './seed/seed.service';
 
 async function bootstrap() {
   dotenv.config();
@@ -11,6 +12,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors(); // TODO: just for dev only
+
+  const seedService = app.get(SeedService);
+  await seedService.start();
+
 
   const options = new DocumentBuilder()
     .setTitle('Forum API')

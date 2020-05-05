@@ -21,7 +21,7 @@ export class SeedService {
 
   async seedUsers() {
     const userCount = await this.userService.count();
-    if (!userCount) {
+    if (userCount) {
       return;
     }
 
