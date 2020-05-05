@@ -1,27 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { compare } from 'bcrypt';
+
+import { UserDto } from '../users/dtos/user.dto';
+import { RegisterUserDto } from './dtos/register-user.dto';
+import { TokenResponse } from '../common/models/token.response';
+
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
-  ) {}
+    private jwtService: JwtService,
+  ) {
+  }
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.usersService.findByEmail(email);
+    if (user && await compare(pass, user.password)) {
+      return user;
     }
     return null;
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(user: any): Promise<TokenResponse> {
+    const payload = { fullName: user.fullName, id: user.id, email: user.email, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async registerUser(dto: RegisterUserDto): Promise<TokenResponse> {
+    const user = await this.usersService.addUser(dto);
+    return this.login(user);
+  }
+
+  async profileFromUserId(id: string): Promise<UserDto> {
+    const user = await this.usersService.findById(id);
+    return user.toDto();
   }
 }
