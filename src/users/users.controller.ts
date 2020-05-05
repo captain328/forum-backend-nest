@@ -19,7 +19,7 @@ export class UsersController {
   }
 
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Change role of the user. Only admin users can hava access to this api.' })
+  @ApiOperation({ summary: 'Change role of the user. Only admin users can hava access to this api' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([UserRole.Admin])
   @Put('change-role')

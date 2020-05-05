@@ -1,18 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateDateColumn, DeleteDateColumn, IsNull, Not, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
+import { CommonDto } from '../dtos/common.dto';
+
 export class SoftDelete {
-
-  static scope = {
-    'default': {
-      deletedAt: IsNull(),
-    },
-    'allEntity': {
-      deletedAt: Not(IsNull()),
-    },
-  };
-
 
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
@@ -29,4 +21,12 @@ export class SoftDelete {
   @UpdateDateColumn()
   @ApiProperty()
   updatedAt: string;
+
+  toDto(): CommonDto {
+    return {
+      id: this.id,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
 }

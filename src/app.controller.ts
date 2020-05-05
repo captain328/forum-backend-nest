@@ -7,7 +7,7 @@ import { ApiOperation } from '@nestjs/swagger';
 export class AppController {
 
   @Get('health')
-  @ApiOperation({ summary: 'Get if server is running or not.' })
+  @ApiOperation({ summary: 'Get if server is running or not' })
   health() {
     return new HealthResponse();
   }

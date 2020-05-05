@@ -5,7 +5,7 @@ import { UsersService } from '../users/users.service';
 import { mailDomain, seedAdminUser, seedGeneralUser, seedModeratorUser, seedPassword } from './data/user.data';
 import { UserRole } from '../users/enums';
 import { seedGeneralUserCount, seedModeratorCount } from './consts';
-import { User } from '../users/entities/user.entity';
+import { UserEntity } from '../users/entities/user.entity';
 
 @Injectable()
 export class SeedService {
@@ -47,7 +47,7 @@ export class SeedService {
     }
   }
 
-  private async addUserWithRole(role: UserRole): Promise<User> {
+  private async addUserWithRole(role: UserRole): Promise<UserEntity> {
     const firstName = Faker.name.firstName();
     const lastName = Faker.name.lastName();
     const user = await this.userService.addUser({ fullName: `${firstName} ${lastName}`, email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${mailDomain}`, password: seedPassword });
