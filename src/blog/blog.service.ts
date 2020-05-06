@@ -36,10 +36,10 @@ export class BlogService {
 
   async delete(id: string): Promise<SuccessResponse> {
     const result = await this.blogRepository.softDelete({ id });
-    if (result.affected) {
-      return new SuccessResponse();
+    if (!result.affected) {
+      throw new BadRequestException('Blog not found.');
     }
-    throw new BadRequestException('Blog not found.');
+    return new SuccessResponse();
   }
 
   async count(): Promise<number> {

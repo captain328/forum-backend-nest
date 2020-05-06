@@ -92,12 +92,14 @@ export class SeedService {
       console.log('skipped comment seed');
       return;
     }
+    const users = await this.userService.find();
     const blogs = await this.blogService.find();
     await Promise.all(blogs.map(async blog => {
       console.log(`Adding seed comments for blog "${blog.title.substr(20)}"...`);
       for (let i = 0; i < seedCommentCountPerBlog; i++) {
         const content = Faker.lorem.sentence(seedCommentWordCount);
-        await this.commentService.add(blog, { content });
+        const author = Faker.random.arrayElement(users);
+        await this.commentService.add(author, blog, { content });
       }
     }));
     console.log('Finished adding seed comments.');
