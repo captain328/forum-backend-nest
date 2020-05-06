@@ -30,7 +30,11 @@ export class BlogService {
   }
 
   async update(id: string, dto: AddBlogDto): Promise<BlogEntity> {
-    const blog = getFromDto<BlogEntity>(dto, await this.blogRepository.findOne({ id }));
+    const found = await this.findById(id);
+    if (!found) {
+      throw new BadRequestException('Unable to find the requested blog');
+    }
+    const blog = getFromDto<BlogEntity>(dto, found);
     return this.blogRepository.save(blog);
   }
 
