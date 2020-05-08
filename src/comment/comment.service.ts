@@ -30,8 +30,12 @@ export class CommentService {
     return this.commentRepository.save(comment);
   }
 
+  async findById(id: string): Promise<CommentEntity> {
+    return this.commentRepository.findOne({ id });
+  }
+
   async update(id: string, dto: AddCommentDto): Promise<CommentEntity> {
-    const comment = await this.commentRepository.findOne({ id });
+    const comment = await this.findById(id);
     comment.content = dto.content;
     return this.commentRepository.save(comment);
   }
