@@ -45,7 +45,7 @@ describe('BlogService', () => {
     const user = new UserEntity();
     await service.add(user, addBlogMockData);
     const blog = getFromDto<BlogEntity>(addBlogMockData, new BlogEntity());
-    expect(blogMockRepository.save).toHaveBeenCalledWith({...blog, author: user});
+    expect(blogMockRepository.save).toHaveBeenCalledWith({ ...blog, author: user });
   });
 
   it('update should call repository save method with provided content and title when the blog exists', async () => {
@@ -54,7 +54,7 @@ describe('BlogService', () => {
     existingBlog.id = id;
     jest.spyOn(service, 'findById').mockReturnValue(new Promise<BlogEntity>(resolve => resolve(existingBlog)));
     await service.update(id, addBlogMockData);
-    expect(blogMockRepository.save).toHaveBeenCalledWith({...existingBlog, ...addBlogMockData});
+    expect(blogMockRepository.save).toHaveBeenCalledWith({ ...existingBlog, ...addBlogMockData });
   });
 
   it('update should raise exception when the blog does not exists', async () => {
@@ -70,16 +70,16 @@ describe('BlogService', () => {
   });
 
   it('delete should return success response when the blog exists', async () => {
-    const id = Faker.random.uuid();
-    blogMockRepository.softDelete = jest.fn().mockImplementation(() => new Promise(resolve => resolve({ affected: 1 })));
-    const result = await service.delete(id);
+    const blog = new BlogEntity();
+    blogMockRepository.softRemove = jest.fn().mockImplementation(() => new Promise(resolve => resolve(blog)));
+    const result = await service.delete(blog);
     expect(result).toEqual({ success: true });
   });
 
 
-  it('delete should raise exceptoin when the blog does not exists', async () => {
+  it('delete should raise exception when the blog does not exists', async () => {
     const id = Faker.random.uuid();
-    blogMockRepository.softDelete = jest.fn().mockImplementation(() => new Promise(resolve => resolve({ affected: 0 })));
+    blogMockRepository.softRemove = jest.fn().mockImplementation(() => new Promise(resolve => resolve(null)));
     await expect(service.delete(id)).rejects.toThrowError('Blog not found.');
   });
 });

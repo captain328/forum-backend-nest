@@ -10,12 +10,14 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/enums';
 import { SuccessResponse } from '../common/models/success-response';
+import { CommentService } from '../comment/comment.service';
 
 @ApiTags('Blog')
 @Controller('blog')
 export class BlogController {
   constructor(
     private blogService: BlogService,
+    private commentService: CommentService,
     private userService: UsersService,
   ) {
   }
@@ -70,6 +72,8 @@ export class BlogController {
   @Roles([UserRole.Moderator])
   @Delete(':id')
   async deleteBlog(@Param('id') id: string): Promise<SuccessResponse> {
-    return this.blogService.delete(id);
+    const blog = await this.blogService.findById(id);
+    await this.commentService.deleteMany(blog.comments);
+    return this.blogService.delete(blog);
   }
 }

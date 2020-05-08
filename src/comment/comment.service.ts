@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -36,11 +36,13 @@ export class CommentService {
     return this.commentRepository.save(comment);
   }
 
-  async delete(id: string): Promise<SuccessResponse> {
-    const result = await this.commentRepository.softDelete({ id });
-    if (!result.affected) {
-      throw new BadRequestException('Comment not found.');
-    }
+  async delete(comment: CommentEntity): Promise<SuccessResponse> {
+    await this.commentRepository.softRemove(comment);
+    return new SuccessResponse(true);
+  }
+
+  async deleteMany(comments: CommentEntity[]): Promise<SuccessResponse> {
+    await this.commentRepository.softRemove(comments);
     return new SuccessResponse(true);
   }
 
