@@ -75,11 +75,4 @@ describe('BlogService', () => {
     const result = await service.delete(blog);
     expect(result).toEqual({ success: true });
   });
-
-
-  it('delete should raise exception when the blog does not exists', async () => {
-    const id = Faker.random.uuid();
-    blogMockRepository.softRemove = jest.fn().mockImplementation(() => new Promise(resolve => resolve(null)));
-    await expect(service.delete(id)).rejects.toThrowError('Blog not found.');
-  });
 });

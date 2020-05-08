@@ -38,11 +38,8 @@ export class BlogService {
     return this.blogRepository.save(blog);
   }
 
-  async delete(blog): Promise<SuccessResponse> {
-    const removed = await this.blogRepository.softRemove(blog);
-    if (!removed) {
-      throw new BadRequestException('Blog not found.');
-    }
+  async delete(blog: BlogEntity): Promise<SuccessResponse> {
+    await this.blogRepository.softRemove(blog);
     return new SuccessResponse();
   }
 

@@ -5,12 +5,14 @@ import { UsersModule } from '../users/users.module';
 import { BlogService } from './blog.service';
 import { BlogController } from './blog.controller';
 import { BlogEntity } from './entities/blog.entity';
+import { CommentService } from '../comment/comment.service';
+import { CommentEntity } from '../comment/entities/comment.entity';
 
 @Module({
-  providers: [BlogService],
+  providers: [BlogService, CommentService],
   controllers: [BlogController],
   imports: [
-    TypeOrmModule.forFeature([BlogEntity]),
+    TypeOrmModule.forFeature([BlogEntity, CommentEntity]),
     UsersModule,
   ],
   exports: [BlogService],

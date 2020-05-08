@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { BlogService } from './blog.service';
@@ -73,6 +84,9 @@ export class BlogController {
   @Delete(':id')
   async deleteBlog(@Param('id') id: string): Promise<SuccessResponse> {
     const blog = await this.blogService.findById(id);
+    if (!blog) {
+      throw new BadRequestException('The blog does not exist.');
+    }
     await this.commentService.deleteMany(blog.comments);
     return this.blogService.delete(blog);
   }

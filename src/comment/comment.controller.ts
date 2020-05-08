@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { CommentService } from './comment.service';
@@ -65,6 +76,10 @@ export class CommentController {
   @Roles([UserRole.Moderator])
   @Delete('comment/:id')
   async deleteComment(@Param('id') id: string): Promise<SuccessResponse> {
-    return this.commentService.delete(id);
+    const comment = await this.commentService.findById(id);
+    if (!comment) {
+      throw new BadRequestException('The comment does not exist.');
+    }
+    return this.commentService.delete(comment);
   }
 }
