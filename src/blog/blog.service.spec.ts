@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as Faker from 'faker';
+import { Repository } from 'typeorm';
 
 import { BlogService } from './blog.service';
 import { MockType, repositoryMockFactory } from '../mock/repository.mock';
 import { BlogEntity } from './entities/blog.entity';
-import { Repository } from 'typeorm';
 import { UserEntity } from '../users/entities/user.entity';
 import { addBlogMockData } from '../mock/add-blog.mock';
 import { getFromDto } from '../common/utils/repository.util';

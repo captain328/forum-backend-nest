@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsUUID } from 'class-validator';
+
 import { UserRole } from '../enums';
 
 export class ChangeRoleDto {

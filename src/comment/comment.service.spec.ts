@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as Faker from 'faker';
+import { Repository } from 'typeorm';
 
 import { CommentService } from './comment.service';
 import { MockType, repositoryMockFactory } from '../mock/repository.mock';
 import { CommentEntity } from './entities/comment.entity';
-import { Repository } from 'typeorm';
 
 describe('CommentService', () => {
   let service: CommentService;

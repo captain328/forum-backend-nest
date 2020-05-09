@@ -8,7 +8,6 @@ import { SeedModule } from './seed/seed.module';
 import { BlogModule } from './blog/blog.module';
 import { CommentModule } from './comment/comment.module';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 
 @Module({
@@ -21,7 +20,6 @@ import { LoggerMiddleware } from './common/middlewares/logger.middleware';
     CommentModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
