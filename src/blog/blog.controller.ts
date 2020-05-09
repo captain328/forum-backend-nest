@@ -43,7 +43,7 @@ export class BlogController {
 
   @ApiOkResponse({ type: () => BlogDto })
   @ApiOperation({ summary: 'Get blog detail' })
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({ name: 'id', required: true, description: 'uuid of the blog to get' })
   @Get(':id')
   async getBlog(@Param('id') id: string): Promise<BlogDto> {
     const blog = await this.blogService.findById(id);
@@ -66,7 +66,7 @@ export class BlogController {
   @ApiOkResponse({ type: () => BlogDto })
   @ApiOperation({ summary: 'Edit a blog' })
   @ApiBody({ type: () => AddBlogDto })
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({ name: 'id', required: true, description: 'uuid of the blog to update' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([UserRole.Moderator])
   @Put(':id')
@@ -78,7 +78,7 @@ export class BlogController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: SuccessResponse })
   @ApiOperation({ summary: 'Delete a blog' })
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({ name: 'id', required: true, description: 'uuid of the blog to delete' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([UserRole.Moderator])
   @Delete(':id')

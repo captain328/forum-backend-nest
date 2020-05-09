@@ -22,9 +22,13 @@ export class UsersService {
     return this.userRepository.findOne({ id });
   }
 
-  async addUser(dto: RegisterUserDto): Promise<UserEntity> {
-    if (await this.findByEmail(dto.email)) {
-      throw new BadRequestException('Email is already used.');
+  async addUser(dto: RegisterUserDto, throwErrors = true): Promise<UserEntity> {
+    const found = await this.findByEmail(dto.email);
+    if (found) {
+      if (throwErrors) {
+        throw new BadRequestException('Email is already used.');
+      }
+      return found;
     }
     const user = getFromDto<UserEntity>(dto, new UserEntity());
     user.role = UserRole.User;

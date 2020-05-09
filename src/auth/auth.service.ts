@@ -31,8 +31,8 @@ export class AuthService {
     };
   }
 
-  async registerUser(dto: RegisterUserDto): Promise<TokenResponse> {
-    const user = await this.usersService.addUser(dto);
+  async registerUser(dto: RegisterUserDto, throwError = true): Promise<TokenResponse> {
+    const user = await this.usersService.addUser(dto, throwError);
     return this.login(user);
   }
 

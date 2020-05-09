@@ -35,7 +35,7 @@ export class CommentController {
 
   @ApiOkResponse({ type: () => CommentDto, isArray: true })
   @ApiOperation({ summary: 'Get all comments for the blog' })
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({ name: 'id', required: true, description: 'uuid of the blog to get' })
   @Get('blog/:id/comment')
   async comments(@Param('id') id: string): Promise<CommentDto[]> {
     const comments = await this.commentService.findByBlogId(id);
@@ -46,6 +46,7 @@ export class CommentController {
   @ApiOkResponse({ type: () => CommentDto })
   @ApiOperation({ summary: 'Add comment to a blog' })
   @ApiBody({ type: AddCommentDto })
+  @ApiParam({ name: 'id', required: true, description: 'uuid of the blog to attach a comment' })
   @UseGuards(JwtAuthGuard)
   @Post('blog/:id/comment')
   async addComment(@Request() request, @Param('id') id: string, @Body() dto: AddCommentDto): Promise<CommentDto> {
@@ -59,7 +60,7 @@ export class CommentController {
   @ApiOkResponse({ type: () => CommentDto })
   @ApiOperation({ summary: 'Edit a comment' })
   @ApiBody({ type: AddCommentDto })
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({ name: 'id', required: true, description: 'uuid of the comment to update' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([UserRole.Moderator])
   @Put('comment/:id')
@@ -71,7 +72,7 @@ export class CommentController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: () => SuccessResponse })
   @ApiOperation({ summary: 'Delete a comment' })
-  @ApiParam({ name: 'id', required: true })
+  @ApiParam({ name: 'id', required: true, description: 'uuid of the comment to delete' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([UserRole.Moderator])
   @Delete('comment/:id')

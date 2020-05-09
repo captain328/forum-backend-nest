@@ -5,15 +5,15 @@ import { UserDto } from '../../users/dtos/user.dto';
 import { CommentDto } from '../../comment/dtos/comment.dto';
 
 export class BlogDto extends CommonDto{
-  @ApiProperty()
+  @ApiProperty({ description: 'title of the blog' })
   title: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'content of the blog' })
   content: string;
 
-  @ApiProperty({ type: () => UserDto })
+  @ApiProperty({ type: () => UserDto, description: 'author of the blog' })
   author: UserDto;
 
-  @ApiProperty({ type: () => CommentDto, isArray: true })
+  @ApiProperty({ type: () => CommentDto, isArray: true, description: 'comments attached to the blog' })
   comments: CommentDto[];
 }
