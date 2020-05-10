@@ -24,7 +24,7 @@ import { SuccessResponse } from '../common/models/success-response';
 import { CommentService } from '../comment/comment.service';
 
 @ApiTags('Blog')
-@Controller('blog')
+@Controller('blogs')
 export class BlogController {
   constructor(
     private blogService: BlogService,

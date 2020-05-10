@@ -35,10 +35,10 @@ export class CommentController {
 
   @ApiOkResponse({ type: () => CommentDto, isArray: true })
   @ApiOperation({ summary: 'Get all comments for the blog' })
-  @ApiParam({ name: 'id', required: true, description: 'uuid of the blog to get' })
-  @Get('blog/:id/comment')
-  async comments(@Param('id') id: string): Promise<CommentDto[]> {
-    const comments = await this.commentService.findByBlogId(id);
+  @ApiParam({ name: 'bID', required: true, description: 'uuid of the blog to get' })
+  @Get('blogs/:bID/comments')
+  async comments(@Param('bID') bID: string): Promise<CommentDto[]> {
+    const comments = await this.commentService.findByBlogId(bID);
     return comments.map(comment => comment.toDto());
   }
 
@@ -46,12 +46,12 @@ export class CommentController {
   @ApiOkResponse({ type: () => CommentDto })
   @ApiOperation({ summary: 'Add comment to a blog' })
   @ApiBody({ type: AddCommentDto })
-  @ApiParam({ name: 'id', required: true, description: 'uuid of the blog to attach a comment' })
+  @ApiParam({ name: 'bID', required: true, description: 'uuid of the blog to add a comment' })
   @UseGuards(JwtAuthGuard)
-  @Post('blog/:id/comment')
-  async addComment(@Request() request, @Param('id') id: string, @Body() dto: AddCommentDto): Promise<CommentDto> {
+  @Post('blogs/:bID/comments')
+  async addComment(@Request() request, @Param('bID') bID: string, @Body() dto: AddCommentDto): Promise<CommentDto> {
     const user = await this.userService.findById(request.user.id);
-    const blog = await this.blogService.findById(id);
+    const blog = await this.blogService.findById(bID);
     const comment = await this.commentService.add(user, blog, dto);
     return comment.toDto();
   }
@@ -60,24 +60,26 @@ export class CommentController {
   @ApiOkResponse({ type: () => CommentDto })
   @ApiOperation({ summary: 'Edit a comment' })
   @ApiBody({ type: AddCommentDto })
-  @ApiParam({ name: 'id', required: true, description: 'uuid of the comment to update' })
+  @ApiParam({ name: 'bID', required: true, description: 'uuid of a blog that will contain the comment' })
+  @ApiParam({ name: 'cID', required: true, description: 'uuid of the comment to update' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([UserRole.Moderator])
-  @Put('comment/:id')
-  async updateComment(@Param('id') id: string, @Body() dto: AddCommentDto): Promise<CommentDto> {
-    const comment = await this.commentService.update(id, dto);
+  @Put('blogs/:bID/comments/:cID')
+  async updateComment(@Param('cID') cID: string, @Body() dto: AddCommentDto): Promise<CommentDto> {
+    const comment = await this.commentService.update(cID, dto);
     return comment.toDto();
   }
 
   @ApiBearerAuth()
   @ApiOkResponse({ type: () => SuccessResponse })
   @ApiOperation({ summary: 'Delete a comment' })
-  @ApiParam({ name: 'id', required: true, description: 'uuid of the comment to delete' })
+  @ApiParam({ name: 'bID', required: true, description: 'uuid of a blog that containing the comment' })
+  @ApiParam({ name: 'cID', required: true, description: 'uuid of the comment to delete' })
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles([UserRole.Moderator])
-  @Delete('comment/:id')
-  async deleteComment(@Param('id') id: string): Promise<SuccessResponse> {
-    const comment = await this.commentService.findById(id);
+  @Delete('blogs/:bID/comments/:cID')
+  async deleteComment(@Param('cID') cID: string): Promise<SuccessResponse> {
+    const comment = await this.commentService.findById(cID);
     if (!comment) {
       throw new BadRequestException('The comment does not exist.');
     }
